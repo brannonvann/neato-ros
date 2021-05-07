@@ -186,9 +186,9 @@ Create Catkin Workspace for Robot
 
 #### Setup ROS for Neato
 
-1.  Clone this package to the Raspberry Pi.
+1.  Clone this package with the neato-driver-python submodule to the Raspberry Pi.
 
-        cd ~/catkin_ws/src && git clone https://github.com/brannonvann/neato-ros.git
+        cd ~/catkin_ws/src && git clone --recurse-submodules https://github.com/brannonvann/neato-ros.git
 
 1.  Install Packages
 
