@@ -1,0 +1,99 @@
+#configuration specific for the global costmap.
+# http://wiki.ros.org/costmap_2d/
+
+# Template source: https://github.com/brannonvann/ros-params
+global_costmap:
+  # http://wiki.ros.org/costmap_2d/
+  # Hydro and later releases use plugins for all costmap_2d layers. If you don't provide a plugins parameter then the initialization code will assume that your configuration is pre-Hydro and will load a default set of plugins with default namespaces. Your parameters will be moved to the new namespaces automagically. The default namespaces are static_layer, obstacle_layer and inflation_layer.
+  _: this here to maintain format
+  static_map: true #global is generated so this should be true unless using gmapping and generating the map on the fly.
+  ### Plugins
+  #plugins: pre-Hydro behavior # Default: pre-Hydro behavior Sequence of plugin specifications, one per layer. Each specification is a dictionary with name and type fields. The name is used to define the parameter namespace for the plugin. See the tutorials for examples.
+
+  ### Coordinate frame and tf parameters
+  global_frame: 'map' # Default: "/map" The global frame for the costmap to operate in.
+  # https://answers.ros.org/question/304537/could-not-transform-the-global-plan-to-the-frame-of-the-controller/
+  #robot_base_frame: "base_link" # Default: "base_link" The name of the frame for the base link of the robot.
+  transform_tolerance: 1.5 # Default: 0.2 Specifies the delay in transform (tf) data that is tolerable in seconds. This parameter serves as a safeguard to losing a link in the tf tree while still allowing an amount of latency the user is comfortable with to exist in the system. For example, a transform being 0.2 seconds out-of-date may be tolerable, but a transform being 8 seconds out of date is not. If the tf transform between the coordinate frames specified by the global_frame and robot_base_frame parameters is transform_tolerance seconds older than ros::Time::now(), then the navigation stack will stop the robot.
+
+  ### Rate parameters
+  #https://answers.ros.org/question/369769/update_frequency-vs-publish_frequency-costmap-parameters/
+  #update_frequency: 5.0 # Default: 5.0 The frequency in Hz for the map to be updated.
+  #publish_frequency: 0.0 # Default: 0.0 The frequency in Hz for the map to be publish display information.
+
+  ### Map management parameters
+  #rolling_window: false # Default: false Whether or not to use a rolling window version of the costmap. If the static_map parameter is set to true, this parameter must be set to false.
+  #always_send_full_costmap: false # Default: false If true the full costmap is published to "~costmap" every update. If false only the part of the costmap that has changed is published on the "~costmap_updates" topic.
+
+  # The following parameters can be overwritten by some layers, namely the static map layer.
+  #width: 10 # Default: 10 The width of the map in meters.
+  #height: 10 # Default: 10 The height of the map in meters.
+  #resolution: 0.05 # Default: 0.05 The resolution of the map in meters/cell.
+  #origin_x: 0.0 # Default: 0.0 The x origin of the map in the global frame in meters.
+  #origin_y: 0.0 # Default: 0.0 The y origin of the map in the global frame in meters.
+
+  static_layer:
+    # http://wiki.ros.org/costmap_2d/hydro/staticmap
+    # The static map incorporates mostly unchanging data from an external source (see the map_server package for documentation on building a map).
+    _: this here to maintain format
+    #unknown_cost_value: -1 # Default: -1 The value for which a cost should be considered unknown when reading in a map from the map server. If the costmap is not tracking unknown space, costs of this value will be considered occupied. A value of zero also results in this parameter being unused.
+    #lethal_cost_threshold: 100 # Default: 100 The threshold value at which to consider a cost lethal when reading in a map from the map server.
+    #map_topic: "map" # Default: "map" The topic that the costmap subscribes to for the static map. This parameter is useful when you have multiple costmap instances within a single node that you want to use different static maps. - New in navigation 1.3.1
+    #first_map_only: false # Default: false Only subscribe to the first message on the map topic, ignoring all subsequent messages
+    #subscribe_to_updates: false # Default: false In addition to map_topic, also subscribe to map_topic + "_updates"
+    #track_unknown_space: true # Default: true If true, unknown values in the map messages are translated directly to the layer. Otherwise, unknown values in the map message are translated as FREE_SPACE in the layer.
+    #use_maximum: false # Default: false Only matters if the static layer is not the bottom layer. If true, only the maximum value will be written to the master costmap.
+    #trinary_costmap: true # Default: true If true, translates all map message values to NO_INFORMATION/FREE_SPACE/LETHAL_OBSTACLE (three values). If false, a full spectrum of intermediate values is possible.
+
+  obstacle_layer:
+    # http://wiki.ros.org/costmap_2d/hydro/obstacles
+    # The obstacle and voxel layers incorporate information from the sensors in the form of PointClouds or LaserScans. The obstacle layer tracks in two dimensions, whereas the voxel layer tracks in three.
+    _: this here to maintain format
+
+    ### Sensor management parameters
+    #observation_sources: "" # Default: "" A list of observation source names separated by spaces. This defines each of the <source_name> namespaces defined below.
+    #Each source_name in observation_sources defines a namespace in which parameters can be set:
+    # if observation_sources: "example"
+    #example:
+    #topic: source_name # Default: source_name(example) The topic on which sensor data comes in for this source. Defaults to the name of the source.
+    #sensor_frame: "" # Default: "" The frame of the origin of the sensor. Leave empty to attempt to read the frame from sensor data. The frame can be read from both sensor_msgs/LaserScan, sensor_msgs/PointCloud, and sensor_msgs/PointCloud2 messages.
+    #observation_persistence: 0.0 # Default: 0.0 How long to keep each sensor reading in seconds. A value of 0.0 will only keep the most recent reading.
+    #expected_update_rate: 0.0 # Default: 0.0 How often to expect a reading from a sensor in seconds. A value of 0.0 will allow infinite time between readings. This parameter is used as a failsafe to keep the navigation stack from commanding the robot when a sensor has failed. It should be set to a value that is slightly more permissive than the actual rate of the sensor. For example, if we expect a scan from a laser every 0.05 seconds we might set this parameter to be 0.1 seconds to give a generous buffer and account for some amount of system latency.
+    #data_type: "PointCloud" # Default: "PointCloud" The data type associated with the topic, right now only "PointCloud", "PointCloud2", and "LaserScan" are supported.
+    #clearing: false # Default: false Whether or not this observation should be used to clear out freespace.
+    #marking: true # Default: true Whether or not this observation should be used to mark obstacles.
+    #max_obstacle_height: 2.0 # Default: 2.0 The maximum height in meters of a sensor reading considered valid. This is usually set to be slightly higher than the height of the robot. Setting this parameter to a value greater than the global max_obstacle_height parameter has no effect. Setting this parameter to a value less than the global max_obstacle_height will filter out points from this sensor above that height.
+    #min_obstacle_height: 0.0 # Default: 0.0 The minimum height in meters of a sensor reading considered valid. This is usually set to be at ground height, but can be set higher or lower based on the noise model of your sensor.
+    #obstacle_range: 2.5 # Default: 2.5 The maximum range in meters at which to insert obstacles into the costmap using sensor data.
+    #raytrace_range: 3.0 # Default: 3.0 The maximum range in meters at which to raytrace out obstacles from the map using sensor data.
+    #inf_is_valid: false # Default: false Allows for Inf values in "LaserScan" observation messages. The Inf values are converted to the laser maximum range.
+
+    ### Global Filtering Parameters
+    # These parameters apply to all sensors.
+    #max_obstacle_height: 2.0 # Default: 2.0 The maximum height of any obstacle to be inserted into the costmap in meters. This parameter should be set to be slightly higher than the height of your robot.
+    #obstacle_range: 2.5 # Default: 2.5 The default maximum distance from the robot at which an obstacle will be inserted into the cost map in meters. This can be over-ridden on a per-sensor basis.
+    #raytrace_range: 3.0 # Default: 3.0 The default range in meters at which to raytrace out obstacles from the map using sensor data. This can be over-ridden on a per-sensor basis.
+    ### ObstacleCostmapPlugin
+    #These parameters are used by the ObstacleCostmapPlugin.
+
+    #track_unknown_space: false # Default: false If false, each pixel has one of 2 states: lethal obstacle or free. If true, each pixel has one of 3 states: lethal obstacle, free, or unknown.
+    #footprint_clearing_enabled: true # Default: true If true, the robot footprint will clear (mark as free) the space in which it travels.
+    #combination_method: 1 # Default: 1 Changes the behaviour how the obstacle_layer handles incoming data from layers beyond it. Possible values are "Overwrite" (0), "Maximum" (1) and "Nothing" (99). "Overwrite" simply overwrites the data below, i.e. they are not used. "Maximum" is what you want most of the times. It takes the maximum of what is supplied in the obstacle_layer or the incoming data. "Nothing" doesn't change the incoming data at all. Note that this highly influences how the costmap behaves, depending on your setting of track_unkown_space. For a discussion of the influence of the combination_method and track_unknown_space parameters, see this related discussion on ROS answers: https://answers.ros.org/question/316191
+
+    ### VoxelCostmapPlugin
+    #The following parameters are used by the VoxelCostmapPlugin.
+
+    #origin_z: 0.0 # Default: 0.0 The z origin of the map in meters.
+    #z_resolution: 0.2 # Default: 0.2 The z resolution of the map in meters/cell.
+    #z_voxels: 10 # Default: 10 The number of voxels to in each vertical column, the height of the grid is z_resolution * z_voxels.
+    #unknown_threshold: ~z_voxels # Default: ~z_voxels The number of unknown cells allowed in a column considered to be "known"
+    #mark_threshold: 0 # Default: 0 The maximum number of marked cells allowed in a column considered to be "free".
+    #publish_voxel_map: false # Default: false Whether or not to publish the underlying voxel grid for visualization purposes.
+    #footprint_clearing_enabled: true # Default: true If true, the robot footprint will clear (mark as free) the space in which it travels.
+
+  inflation_layer:
+    # http://wiki.ros.org/costmap_2d/hydro/inflation
+    # Inflation is the process of propagating cost values out from occupied cells that decrease with distance.
+    _: this here to maintain format
+    #inflation_radius: 0.55 # Default: 0.55 The radius in meters to which the map inflates obstacle cost values.
+    #cost_scaling_factor: 10.0 # Default: 10.0 A scaling factor to apply to cost values during inflation. The cost function is computed as follows for all cells in the costmap further than the inscribed radius distance and closer than the inflation radius distance away from an actual obstacle: exp(-1.0 * cost_scaling_factor * (distance_from_obstacle - inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE - 1), where costmap_2d::INSCRIBED_INFLATED_OBSTACLE is currently 254. NOTE: since the cost_scaling_factor is multiplied by a negative in the formula, increasing the factor will decrease the resulting cost values.

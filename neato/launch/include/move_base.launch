@@ -1,0 +1,9 @@
+<launch>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find neato)/params/costmap_common.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find neato)/params/costmap_common.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find neato)/params/local_costmap.yaml" command="load" />
+        <rosparam file="$(find neato)/params/global_costmap.yaml" command="load" />
+        <rosparam file="$(find neato)/params/move_base.yaml" command="load" />
+    </node>
+</launch>

@@ -1,0 +1,47 @@
+#configuration shared by global and local costmaps.
+#Some setting only exist here because they should always be set the same for local and global
+# http://wiki.ros.org/costmap_2d
+
+# Template source: https://github.com/brannonvann/ros-params
+
+#obstacle_range: 2.5 # Default: 2.5 The maximum range in meters at which to insert obstacles into the costmap using sensor data.
+#raytrace_range: 3.0 # Default: 3.0 The maximum range in meters at which to raytrace out obstacles from the map using sensor data.
+# Reference for footprint and robot_radius: https://kaiyuzheng.me/documents/navguide.pdf
+footprint:
+  [[0.573, 0.308], [0.573, -0.308], [-0.186, -0.308], [-0.323, -0.050], [-0.323, 0.050], [-0.186, 0.308]]
+#robot_radius: .6
+
+observation_sources: scan # default: "" A list of observation source names separated by spaces. This defines each of the <source_name> namespaces defined below.
+scan: { sensor_frame: sensor_laser, data_type: LaserScan, topic: /scan, marking: true, clearing: true }
+
+cost_scaling_factor: 2.58 # default: 10.0 A scaling factor to apply to cost values during inflation. The cost function is computed as follows for all cells in the costmap further than the inscribed radius distance and closer than the inflation radius distance away from an actual obstacle
+inflation_radius: 1.75 # default: 0.55  The radius in meters to which the map inflates obstacle cost values.
+
+# http://wiki.ros.org/costmap_2d/
+# http://wiki.ros.org/navigation/Tutorials/RobotSestup#Costmap_Configuration_.28local_costmap.29_.26_.28global_costmap.29
+# Hydro and later releases use plugins for all costmap_2d layers. If you don't provide a plugins parameter then the initialization code will assume that your configuration is pre-Hydro and will load a default set of plugins with default namespaces. Your parameters will be moved to the new namespaces automagically. The default namespaces are static_layer, obstacle_layer and inflation_layer.
+
+### Plugins
+#plugins: pre-Hydro behavior # Default: pre-Hydro behavior Sequence of plugin specifications, one per layer. Each specification is a dictionary with name and type fields. The name is used to define the parameter namespace for the plugin. See the tutorials for examples.
+
+### Coordinate frame and tf parameters
+#global_frame: '/map' # Default: "/map" The global frame for the costmap to operate in.
+# https://answers.ros.org/question/304537/could-not-transform-the-global-plan-to-the-frame-of-the-controller/
+#robot_base_frame: "base_link" # Default: "base_link" The name of the frame for the base link of the robot.
+#transform_tolerance: 0.2 # Default: 0.2 Specifies the delay in transform (tf) data that is tolerable in seconds. This parameter serves as a safeguard to losing a link in the tf tree while still allowing an amount of latency the user is comfortable with to exist in the system. For example, a transform being 0.2 seconds out-of-date may be tolerable, but a transform being 8 seconds out of date is not. If the tf transform between the coordinate frames specified by the global_frame and robot_base_frame parameters is transform_tolerance seconds older than ros::Time::now(), then the navigation stack will stop the robot.
+
+### Rate parameters
+#https://answers.ros.org/question/369769/update_frequency-vs-publish_frequency-costmap-parameters/
+#update_frequency: 5.0 # Default: 5.0 The frequency in Hz for the map to be updated.
+#publish_frequency: 0.0 # Default: 0.0 The frequency in Hz for the map to be publish display information.
+
+### Map management parameters
+#rolling_window: false # Default: false Whether or not to use a rolling window version of the costmap. If the static_map parameter is set to true, this parameter must be set to false.
+#always_send_full_costmap: false # Default: false If true the full costmap is published to "~costmap" every update. If false only the part of the costmap that has changed is published on the "~costmap_updates" topic.
+
+# The following parameters can be overwritten by some layers, namely the static map layer.
+#width: 10 # Default: 10 The width of the map in meters.
+#height: 10 # Default: 10 The height of the map in meters.
+#resolution: 0.05 # Default: 0.05 The resolution of the map in meters/cell.
+#origin_x: 0.0 # Default: 0.0 The x origin of the map in the global frame in meters.
+#origin_y: 0.0 # Default: 0.0 The y origin of the map in the global frame in meters.

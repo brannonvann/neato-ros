@@ -1,0 +1,12 @@
+<!-- Launch all base nodes (neato, teleop, robot_state_publisher) -->
+<launch>
+    <!-- one of "keyboard", "logitech" -->
+    <arg name="teleop_controler" default="logitech" />
+    <arg name="model" default="$(find neato)/urdf/neato.urdf"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
+    
+    <include file="$(find neato)/launch/include/neato.launch" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false"/>
+    <include file="$(find neato)/launch/include/teleop_$(arg teleop_controler).launch" />
+
+</launch>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="neato">
+    <!-- bodyRadius: half of body width -->
+    <!-- bodyHeight: body height from base to top, excluding casters and wheels -->
+    <!-- laserRadius: radius of outermost laser body -->
+    <!-- laserHeight: distance from of top of body to top of laser body -->
+    <!-- laserRearOffset: distance from rear of body to rear of laser -->
+    <!-- groundClearance: body to ground at rest -->
+    <!-- wheelTrack: distance between wheel centerline -->
+    <!-- wheelZOffset: distance from bottom of body to center of wheel at rest -->
+    <xacro:property name="bodyRadius" value="0.165" />
+    <xacro:property name="bodyHeight" value="0.074" />
+    <xacro:property name="laserRadius" value="0.048" />
+    <xacro:property name="laserHeight" value="0.016" />
+    <xacro:property name="laserRearOffset" value="0.024" />
+    <xacro:property name="groundClearance" value="0.0095" />
+    <xacro:property name="wheelRadius" value="${0.075/2}" />
+    <xacro:property name="wheelWidth" value="0.015" />
+    <xacro:property name="wheelTrack" value="0.238" />
+    <xacro:property name="wheelZOffset" value="${wheelRadius-groundClearance}" />
+
+    <material name="black">
+        <color rgba="0 0 0 1" />
+    </material>
+
+    <material name="grey">
+        <color rgba=".5 .5 .5 1" />
+    </material>
+
+    <link name="base_link"></link>
+
+    <link name="body">
+        <visual>
+            <!--actual: <origin xyz="0 .060 0" rpy="0 0 0" /> -->
+            <origin xyz="0 ${-bodyRadius/2} 0" rpy="0 0 0" />
+            <geometry>
+                <!--actual: <box size="0.330 0.135 0.074"/> -->
+                <box size="${bodyRadius*2} ${bodyRadius} ${bodyHeight}" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        <visual>
+            <geometry>
+                <cylinder length="${bodyHeight}" radius="${bodyRadius}" />
+            </geometry>
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="body_joint" type="fixed">
+        <origin xyz="0 0 ${bodyHeight/2}" rpy="0 0 ${pi/2}" />
+        <child link="body" />
+        <parent link="base_link" />
+    </joint>
+
+    <link name="sensor_laser">
+        <visual>
+            <geometry>
+                <cylinder radius="${laserRadius}" length="${laserHeight}" />
+            </geometry>
+            <material name="grey" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${laserRadius}" length="${laserHeight}" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="sensor_laser_joint" type="fixed">
+        <origin xyz="${-(bodyRadius - laserRearOffset - laserRadius)} 0 ${(laserHeight/2) + bodyHeight}" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="sensor_laser" />
+    </joint>
+
+    <xacro:macro name="wheel" params="prefix reflect">
+        <link name="wheel_${prefix}">
+            <visual>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+                <geometry>
+                    <cylinder length="${wheelWidth}" radius="${wheelRadius}" />
+                </geometry>
+                <material name="grey" />
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+                <geometry>
+                    <cylinder length="${wheelWidth}" radius="${wheelRadius}" />
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="wheel_${prefix}_joint" type="fixed">
+            <axis xyz="0 1 0" rpy="0 0 0" />
+            <parent link="base_link" />
+            <child link="wheel_${prefix}" />
+            <origin xyz="0 ${reflect * wheelTrack/2} ${wheelZOffset}" rpy="0 0 0" />
+        </joint>
+    </xacro:macro>
+
+    <xacro:wheel prefix="left" reflect="-1" />
+    <xacro:wheel prefix="right" reflect="1" />
+</robot>

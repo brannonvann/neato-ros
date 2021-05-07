@@ -1,0 +1,6 @@
+<!-- launch gmapping -->
+<launch>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+        <rosparam file="$(find neato)/params/gmapping.yaml" command="load"/>
+    </node>
+</launch>

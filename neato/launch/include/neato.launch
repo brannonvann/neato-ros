@@ -1,0 +1,6 @@
+<!-- Launch neato_node -->
+<launch>
+    <node name="neato" pkg="neato" type="neato_node.py" output="screen">
+        <rosparam file="$(find neato)/params/neato.yaml" command="load" />
+    </node>
+</launch>

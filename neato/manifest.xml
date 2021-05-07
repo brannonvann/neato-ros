@@ -1,0 +1,9 @@
+<package>
+    <description brief="neato node">
+       Neato Robot ROS node.
+    </description>
+    <author>Brannon Vann/brannon dot vann at gmail dot com</author>
+    <license>BSD</license>
+    <url>http://www.ros.org/wiki/neato</url>
+    <depend package="rospy"/>
+</package>

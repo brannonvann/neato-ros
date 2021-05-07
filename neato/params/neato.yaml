@@ -1,0 +1,15 @@
+
+# neato params
+publish_frequency: 10
+port: /dev/neato
+base_frame_id: base_link
+wheel_track: 0.240 # distance between the center of the two wheels
+velocity_max_x: 0.3 # neato's max is .3 m/s. 
+velocity_max_z: 0 # neato's max is .3 m/s. 
+scan_frame_id: sensor_laser
+enable_scan: True # Set to True to enable polling and publishing of /scan.
+enable_buttons: True # Set to True to enable polling and publishing of /neato/bumper_event.
+enable_sensors: True # Set to True to enable polling and publishing of /neato/sensors.
+enable_bumpers: True # Set to True to enable polling and publishing of /neato/bumper_event.
+enable_battery: True # Set to True to enable polling and publishing of /battery_state. 
+debug_neato_driver: False # Set to True to print neato_driver messages 
